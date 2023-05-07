@@ -6,39 +6,16 @@ using UnityEngine.Events;
 
 public class Signaling : MonoBehaviour
 {
-    [SerializeField] private UnityEvent _activated;
     [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private House _house;
 
-    private float maxVolume = 1f;
-    private bool _isActivated;
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.TryGetComponent(out Alien alien))
-        {
-            _isActivated = true;
-            
-            if (_isActivated == true)
-            {
-                _activated?.Invoke();
-            }
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.TryGetComponent(out Alien alien))
-        {
-            _isActivated = false;
-            _activated?.Invoke(); 
-        }
-    }
+    private float _maxVolume = 1f;
 
     private void Update()
     {
-        float volume = maxVolume * Time.deltaTime;
+        float volume = _maxVolume * Time.deltaTime;
 
-        if (_isActivated == true)
+        if (_house._isContainsAlien == true)
         {
             _audioSource.volume += volume;
         }
@@ -46,5 +23,20 @@ public class Signaling : MonoBehaviour
         {
             _audioSource.volume -= volume;
         }
+    }
+
+    private void OnEnable()
+    {
+        _house._signaling += PlaySound;
+    }
+
+    private void OnDisable()
+    {
+        _house._signaling -= PlaySound;
+    }
+
+    private void PlaySound()
+    {
+        _audioSource.Play();
     }
 }
