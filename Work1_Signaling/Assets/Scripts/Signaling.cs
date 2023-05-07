@@ -15,7 +15,7 @@ public class Signaling : MonoBehaviour
     {
         float volume = _maxVolume * Time.deltaTime;
 
-        if (_house._isContainsAlien == true)
+        if (_house.IsContainsAlien == true)
         {
             _audioSource.volume += volume;
         }
@@ -27,12 +27,12 @@ public class Signaling : MonoBehaviour
 
     private void OnEnable()
     {
-        _house._signaling += PlaySound;
+        _house.SignalingWorked += PlaySound;
     }
 
     private void OnDisable()
     {
-        _house._signaling -= PlaySound;
+        _house.SignalingWorked -= PlaySound;
     }
 
     private void PlaySound()

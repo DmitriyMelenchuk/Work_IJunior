@@ -5,17 +5,17 @@ using UnityEngine.Events;
 
 public class House : MonoBehaviour
 {
-    public event UnityAction _signaling;
+    public event UnityAction SignalingWorked;
 
-    public bool _isContainsAlien { get; private set; }
+    public bool IsContainsAlien { get; private set; }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out Alien alien))
         {
-            _signaling?.Invoke();
+            SignalingWorked?.Invoke();
 
-            _isContainsAlien = true;
+            IsContainsAlien = true;
         }
     }
 
@@ -23,9 +23,9 @@ public class House : MonoBehaviour
     {
         if (other.TryGetComponent(out Alien alien))
         {
-            _signaling?.Invoke();
+            SignalingWorked?.Invoke();
 
-            _isContainsAlien = false;
+            IsContainsAlien = false;
         }
     }
 }
