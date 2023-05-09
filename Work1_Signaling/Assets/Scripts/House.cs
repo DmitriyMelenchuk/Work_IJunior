@@ -6,6 +6,7 @@ using UnityEngine.Events;
 public class House : MonoBehaviour
 {
     public event UnityAction SignalingWorked;
+    public event UnityAction ChangedVolume;
 
     public bool IsContainsAlien { get; private set; }
 
@@ -13,9 +14,9 @@ public class House : MonoBehaviour
     {
         if (other.TryGetComponent(out Alien alien))
         {
-            SignalingWorked?.Invoke();
-
             IsContainsAlien = true;
+            SignalingWorked?.Invoke();
+            ChangedVolume?.Invoke();
         }
     }
 
@@ -23,9 +24,9 @@ public class House : MonoBehaviour
     {
         if (other.TryGetComponent(out Alien alien))
         {
-            SignalingWorked?.Invoke();
-
             IsContainsAlien = false;
+            SignalingWorked?.Invoke();
+            ChangedVolume?.Invoke(); 
         }
     }
 }

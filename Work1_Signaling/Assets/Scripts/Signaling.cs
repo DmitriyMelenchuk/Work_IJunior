@@ -9,34 +9,53 @@ public class Signaling : MonoBehaviour
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private House _house;
 
-    private float _maxVolume = 1f;
-
-    private void Update()
-    {
-        float volume = _maxVolume * Time.deltaTime;
-
-        if (_house.IsContainsAlien == true)
-        {
-            _audioSource.volume += volume;
-        }
-        else
-        {
-            _audioSource.volume -= volume;
-        }
-    }
+    private float _volume = 0.1f;
 
     private void OnEnable()
     {
-        _house.SignalingWorked += PlaySound;
+        _house.SignalingWorked += OnPlaySound;
+        _house.ChangedVolume += OnChangeVolume;
     }
 
     private void OnDisable()
     {
-        _house.SignalingWorked -= PlaySound;
+        _house.SignalingWorked -= OnPlaySound;
+        _house.ChangedVolume -= OnChangeVolume;
     }
 
-    private void PlaySound()
+    private void OnPlaySound()
     {
         _audioSource.Play();
     }
+
+    private void OnChangeVolume()
+    {
+        StartCoroutine(ChangeVolume());
+    }
+
+    private IEnumerator ChangeVolume()
+    {
+        int targetVolume;
+        float volumeDelta = _volume * Time.deltaTime;
+
+        while (_house.IsContainsAlien == true)
+        {
+            targetVolume = 1;
+
+            _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, targetVolume, volumeDelta);
+
+            yield return null;
+
+        }
+
+        while (_house.IsContainsAlien == false)
+        {
+            targetVolume = 0;
+
+            _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, targetVolume, volumeDelta);
+
+            yield return null;
+        }
+    }
 }
+
