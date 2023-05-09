@@ -9,7 +9,8 @@ public class Signaling : MonoBehaviour
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private House _house;
 
-    private float _volume = 0.1f;
+    private Coroutine ChangeVolumeWorks;
+    private float _volume = 1;
 
     private void OnEnable()
     {
@@ -30,28 +31,32 @@ public class Signaling : MonoBehaviour
 
     private void OnChangeVolume()
     {
-        StartCoroutine(ChangeVolume());
+        if (ChangeVolumeWorks != null)
+        {
+            StopCoroutine(ChangeVolumeWorks);
+        }
+
+        ChangeVolumeWorks = StartCoroutine(ChangeVolume());
     }
 
     private IEnumerator ChangeVolume()
     {
+        float volumeDelta;
         int targetVolume;
-        float volumeDelta = _volume * Time.deltaTime;
-
-        while (_house.IsContainsAlien == true)
+        
+        if (_house.IsContainsAlien == true)
         {
             targetVolume = 1;
-
-            _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, targetVolume, volumeDelta);
-
-            yield return null;
-
         }
-
-        while (_house.IsContainsAlien == false)
+        else
         {
             targetVolume = 0;
+        }
 
+        while (_audioSource.volume != targetVolume)
+        {          
+            volumeDelta = _volume * Time.deltaTime;
+            
             _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, targetVolume, volumeDelta);
 
             yield return null;
