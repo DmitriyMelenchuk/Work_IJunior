@@ -9,19 +9,19 @@ public class Signaling : MonoBehaviour
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private House _house;
 
-    private Coroutine ChangeVolumeWorks;
+    private Coroutine _changeVolumeWorks;
     private float _volume = 1;
 
     private void OnEnable()
     {
-        _house.SignalingWorked += OnPlaySound;
-        _house.ChangedVolume += OnChangeVolume;
+        _house.ThiefEntered += OnPlaySound;
+        _house.SignalingActivated += OnChangeVolume;
     }
 
     private void OnDisable()
     {
-        _house.SignalingWorked -= OnPlaySound;
-        _house.ChangedVolume -= OnChangeVolume;
+        _house.ThiefEntered -= OnPlaySound;
+        _house.SignalingActivated -= OnChangeVolume;
     }
 
     private void OnPlaySound()
@@ -31,27 +31,17 @@ public class Signaling : MonoBehaviour
 
     private void OnChangeVolume()
     {
-        if (ChangeVolumeWorks != null)
+        if (_changeVolumeWorks != null)
         {
-            StopCoroutine(ChangeVolumeWorks);
+            StopCoroutine(_changeVolumeWorks);
         }
 
-        ChangeVolumeWorks = StartCoroutine(ChangeVolume());
+        _changeVolumeWorks = StartCoroutine(ChangeVolume(CheckThiefInHouse()));
     }
 
-    private IEnumerator ChangeVolume()
+    private IEnumerator ChangeVolume(int targetVolume)
     {
         float volumeDelta;
-        int targetVolume;
-        
-        if (_house.IsContainsAlien == true)
-        {
-            targetVolume = 1;
-        }
-        else
-        {
-            targetVolume = 0;
-        }
 
         while (_audioSource.volume != targetVolume)
         {          
@@ -61,6 +51,22 @@ public class Signaling : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    private int CheckThiefInHouse()
+    {
+        int targetVolume;
+
+        if (_house.IsContainsThief == true)
+        {
+            targetVolume = 1;
+        }
+        else
+        {
+            targetVolume = 0;
+        }
+
+        return targetVolume;
     }
 }
 

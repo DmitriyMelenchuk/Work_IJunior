@@ -5,28 +5,28 @@ using UnityEngine.Events;
 
 public class House : MonoBehaviour
 {
-    public event UnityAction SignalingWorked;
-    public event UnityAction ChangedVolume;
+    public event UnityAction ThiefEntered;
+    public event UnityAction SignalingActivated;
 
-    public bool IsContainsAlien { get; private set; }
+    public bool IsContainsThief { get; private set; }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out Alien alien))
+        if (other.TryGetComponent(out Thief thief))
         {
-            IsContainsAlien = true;
-            SignalingWorked?.Invoke();
-            ChangedVolume?.Invoke();
+            IsContainsThief = true;
+            ThiefEntered?.Invoke();
+            SignalingActivated?.Invoke();
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.TryGetComponent(out Alien alien))
+        if (other.TryGetComponent(out Thief thief))
         {
-            IsContainsAlien = false;
-            SignalingWorked?.Invoke();
-            ChangedVolume?.Invoke(); 
+            IsContainsThief = false;
+            ThiefEntered?.Invoke();
+            SignalingActivated?.Invoke(); 
         }
     }
 }
